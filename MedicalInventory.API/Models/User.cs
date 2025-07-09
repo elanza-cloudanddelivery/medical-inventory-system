@@ -40,13 +40,13 @@ namespace MedicalInventory.API.Models
         [StringLength(100, ErrorMessage = "El departamento no puede exceder 100 caracteres")]
         public required string Department { get; set; }
         
-        // Número de empleado o identificación profesional
-        [StringLength(50)]
-        public string? EmployeeId { get; set; }
-        
-        // Código RFID de la tarjeta del usuario para acceso rápido
+        [Required(ErrorMessage = "El ID de empleado es obligatorio")]
+        [StringLength(50, MinimumLength = 3)]
+        public string EmployeeId { get; set; } = string.Empty;
+
+        [Required(ErrorMessage = "La tarjeta RFID es obligatoria")]
         [StringLength(100)]
-        public string? RfidCardCode { get; set; }
+        public string RfidCardCode { get; set; } = string.Empty;
         
         // Teléfono de contacto (opcional pero útil para emergencias)
         [Phone(ErrorMessage = "El formato del teléfono no es válido")]

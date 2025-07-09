@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MedicalInventory.API.Migrations
 {
     /// <inheritdoc />
-    public partial class FixDuplicates : Migration
+    public partial class MakeEmployeeFieldsRequired : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,8 +50,8 @@ namespace MedicalInventory.API.Migrations
                     Email = table.Column<string>(type: "TEXT", maxLength: 200, nullable: false),
                     Role = table.Column<int>(type: "INTEGER", nullable: false),
                     Department = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    EmployeeId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: true),
-                    RfidCardCode = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
+                    EmployeeId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    RfidCardCode = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     PhoneNumber = table.Column<string>(type: "TEXT", maxLength: 20, nullable: true),
                     IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -171,9 +171,9 @@ namespace MedicalInventory.API.Migrations
                 columns: new[] { "Id", "AccountLockedUntil", "CreatedAt", "Department", "Email", "EmployeeId", "FailedLoginAttempts", "FullName", "IsActive", "LastLoginAt", "PasswordHash", "PhoneNumber", "RfidCardCode", "Role", "Username" },
                 values: new object[,]
                 {
-                    { 1, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Administración", "admin@hospital.com", null, 0, "Administrador del Sistema", true, null, "admin123", null, null, 5, "admin" },
-                    { 2, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cardiología", "c.garcia@hospital.com", null, 0, "Dr. Carlos García", true, null, "doctor123", null, null, 1, "doctor.garcia" },
-                    { 3, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Urgencias", "m.lopez@hospital.com", null, 0, "María López", true, null, "nurse123", null, null, 2, "enfermera.lopez" }
+                    { 1, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Administración", "admin@hospital.com", "EMP001", 0, "Administrador del Sistema", true, null, "admin123", "+34666000001", "RFID001", 5, "admin" },
+                    { 2, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Cardiología", "c.garcia@hospital.com", "DOC001", 0, "Dr. Carlos García", true, null, "doctor123", "+34666000002", "RFID002", 1, "doctor.garcia" },
+                    { 3, null, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc), "Urgencias", "m.lopez@hospital.com", "NUR001", 0, "María López", true, null, "nurse123", "+34666000003", "RFID003", 2, "enfermera.lopez" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -226,11 +226,16 @@ namespace MedicalInventory.API.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Users_EmployeeId",
+                table: "Users",
+                column: "EmployeeId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Users_RfidCardCode",
                 table: "Users",
                 column: "RfidCardCode",
-                unique: true,
-                filter: "[RfidCardCode] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",

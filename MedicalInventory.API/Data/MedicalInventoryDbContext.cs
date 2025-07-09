@@ -54,36 +54,50 @@ namespace MedicalInventory.API.Data
             // === CONFIGURACIÓN DE USER ===
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(u => u.Id);
+            entity.HasKey(u => u.Id);
+            
+            entity.HasIndex(u => u.Username)
+                .IsUnique()
+                .HasDatabaseName("IX_Users_Username");
 
-                entity.HasIndex(u => u.Username)
-                    .IsUnique()
-                    .HasDatabaseName("IX_Users_Username");
+            entity.HasIndex(u => u.Email)
+                .IsUnique()
+                .HasDatabaseName("IX_Users_Email");
 
-                entity.HasIndex(u => u.Email)
-                    .IsUnique()
-                    .HasDatabaseName("IX_Users_Email");
+            entity.HasIndex(u => u.EmployeeId)
+                .IsUnique()
+                .HasDatabaseName("IX_Users_EmployeeId");
 
-                entity.HasIndex(u => u.RfidCardCode)
-                    .IsUnique()
-                    .HasDatabaseName("IX_Users_RfidCardCode")
-                    .HasFilter("[RfidCardCode] IS NOT NULL");
+            entity.HasIndex(u => u.RfidCardCode)
+                .IsUnique()
+                .HasDatabaseName("IX_Users_RfidCardCode");
+            
+            entity.Property(u => u.Username)
+                .HasMaxLength(50)
+                .IsRequired();
 
-                entity.Property(u => u.Username)
-                    .HasMaxLength(50)
-                    .IsRequired();
+            entity.Property(u => u.Email)
+                .HasMaxLength(200)
+                .IsRequired();
 
-                entity.Property(u => u.Email)
-                    .HasMaxLength(200)
-                    .IsRequired();
+            entity.Property(u => u.FullName)
+                .HasMaxLength(100)
+                .IsRequired();
 
-                entity.Property(u => u.FullName)
-                    .HasMaxLength(100)
-                    .IsRequired();
+            entity.Property(u => u.EmployeeId)
+                .HasMaxLength(50)
+                .IsRequired();
 
-                entity.Property(u => u.Role)
-                    .HasConversion<int>()
-                    .IsRequired();
+            entity.Property(u => u.RfidCardCode)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(u => u.PhoneNumber)
+                .HasMaxLength(20);
+            
+            entity.Property(u => u.Role)
+                .HasConversion<int>()
+                .IsRequired();
             });
 
             // === CONFIGURACIÓN DE CART ===
@@ -199,6 +213,9 @@ namespace MedicalInventory.API.Data
                     Email = "admin@hospital.com",
                     Role = UserRole.Administrator,
                     Department = "Administración",
+                    EmployeeId = "EMP001",
+                    RfidCardCode = "RFID001",
+                    PhoneNumber = "+34666000001",
                     IsActive = true,
                     CreatedAt = baseDate
                 },
@@ -211,6 +228,9 @@ namespace MedicalInventory.API.Data
                     Email = "c.garcia@hospital.com",
                     Role = UserRole.Doctor,
                     Department = "Cardiología",
+                    EmployeeId = "DOC001",
+                    RfidCardCode = "RFID002",
+                    PhoneNumber = "+34666000002",
                     IsActive = true,
                     CreatedAt = baseDate
                 },
@@ -223,11 +243,13 @@ namespace MedicalInventory.API.Data
                     Email = "m.lopez@hospital.com",
                     Role = UserRole.Nurse,
                     Department = "Urgencias",
+                    EmployeeId = "NUR001",
+                    RfidCardCode = "RFID003",
+                    PhoneNumber = "+34666000003",
                     IsActive = true,
                     CreatedAt = baseDate
                 }
             );
-
             modelBuilder.Entity<MedicalProduct>().HasData(
                 new MedicalProduct
                 {
