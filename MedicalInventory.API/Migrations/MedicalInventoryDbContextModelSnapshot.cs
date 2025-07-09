@@ -301,6 +301,7 @@ namespace MedicalInventory.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("EmployeeId")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -327,6 +328,7 @@ namespace MedicalInventory.API.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RfidCardCode")
+                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
@@ -344,10 +346,13 @@ namespace MedicalInventory.API.Migrations
                         .IsUnique()
                         .HasDatabaseName("IX_Users_Email");
 
+                    b.HasIndex("EmployeeId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Users_EmployeeId");
+
                     b.HasIndex("RfidCardCode")
                         .IsUnique()
-                        .HasDatabaseName("IX_Users_RfidCardCode")
-                        .HasFilter("[RfidCardCode] IS NOT NULL");
+                        .HasDatabaseName("IX_Users_RfidCardCode");
 
                     b.HasIndex("Username")
                         .IsUnique()
@@ -362,10 +367,13 @@ namespace MedicalInventory.API.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Department = "Administración",
                             Email = "admin@hospital.com",
+                            EmployeeId = "EMP001",
                             FailedLoginAttempts = 0,
                             FullName = "Administrador del Sistema",
                             IsActive = true,
                             PasswordHash = "admin123",
+                            PhoneNumber = "+34666000001",
+                            RfidCardCode = "RFID001",
                             Role = 5,
                             Username = "admin"
                         },
@@ -375,10 +383,13 @@ namespace MedicalInventory.API.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Department = "Cardiología",
                             Email = "c.garcia@hospital.com",
+                            EmployeeId = "DOC001",
                             FailedLoginAttempts = 0,
                             FullName = "Dr. Carlos García",
                             IsActive = true,
                             PasswordHash = "doctor123",
+                            PhoneNumber = "+34666000002",
+                            RfidCardCode = "RFID002",
                             Role = 1,
                             Username = "doctor.garcia"
                         },
@@ -388,10 +399,13 @@ namespace MedicalInventory.API.Migrations
                             CreatedAt = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Department = "Urgencias",
                             Email = "m.lopez@hospital.com",
+                            EmployeeId = "NUR001",
                             FailedLoginAttempts = 0,
                             FullName = "María López",
                             IsActive = true,
                             PasswordHash = "nurse123",
+                            PhoneNumber = "+34666000003",
+                            RfidCardCode = "RFID003",
                             Role = 2,
                             Username = "enfermera.lopez"
                         });
