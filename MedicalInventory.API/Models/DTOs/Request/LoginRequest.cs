@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MedicalInventory.API.DTOs.Request;
+namespace MedicalInventory.API.Models.DTOs.Request;
 
     public class LoginRequest
     {
