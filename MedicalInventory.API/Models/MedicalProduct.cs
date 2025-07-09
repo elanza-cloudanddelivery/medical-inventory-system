@@ -54,10 +54,7 @@ namespace MedicalInventory.API.Models
         // Navegación: Lista de todos los movimientos de este producto
         // Esto nos permite ver el historial completo del producto
         public List<MedicalProductMovement> Movements { get; set; } = new List<MedicalProductMovement>();
-        
-        // Navegación: Lista de items en carritos que incluyen este producto
-        public List<CartItem> CartItems { get; set; } = new List<CartItem>();
-        
+    
         // Propiedades calculadas (solo lectura)
         
         // Indica si el producto está próximo a expirar (menos de 30 días)

@@ -115,6 +115,4 @@ namespace MedicalInventory.API.Models
         };
     }
     
-    // Enumeración que define todos los roles posibles en el sistema médico
-
 }

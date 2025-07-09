@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace MedicalInventory.API.Models
 {
@@ -62,22 +63,28 @@ namespace MedicalInventory.API.Models
         // === COLECCIONES DE ITEMS ESPECÍFICOS ===
         // Cada colección filtra items por un tipo específico de problema o característica
         
+        [NotMapped]
         public IEnumerable<CartItem> ControlledProductItems => 
             Items?.Where(item => item.IsControlledProduct) ?? Enumerable.Empty<CartItem>();
         
+        [NotMapped]
         public IEnumerable<CartItem> ExpiredProductItems => 
             Items?.Where(item => item.IsProductExpired) ?? Enumerable.Empty<CartItem>();
         
+        [NotMapped]
         public IEnumerable<CartItem> InsufficientStockItems => 
             Items?.Where(item => !item.HasSufficientStock) ?? Enumerable.Empty<CartItem>();
         
+        [NotMapped]
         public IEnumerable<CartItem> NearExpirationItems => 
             Items?.Where(item => item.IsNearExpiration) ?? Enumerable.Empty<CartItem>();
         
+        [NotMapped]
         public IEnumerable<CartItem> AuthorizationRequiredItems => 
             Items?.Where(item => item.RequiresAuthorization) ?? Enumerable.Empty<CartItem>();
         
         // Colección master de todos los items con problemas
+        [NotMapped]
         public IEnumerable<CartItem> ProblematicItems => 
             Items?.Where(item => !item.CanBeDispensed) ?? Enumerable.Empty<CartItem>();
         
