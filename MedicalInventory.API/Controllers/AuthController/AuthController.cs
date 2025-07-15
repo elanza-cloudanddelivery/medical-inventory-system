@@ -7,7 +7,7 @@ namespace MedicalInventory.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
+public class AuthController : BaseController
 {
     private readonly IAuthService _authService;
     private readonly ILogger<AuthController> _logger;
@@ -84,15 +84,5 @@ public class AuthController : ControllerBase
                 Message = "Error interno del servidor" 
             });
         }
-    }
-
-    [HttpGet("test")]
-    public IActionResult Test()
-    {
-        return Ok(new { 
-            message = "Auth API funcionando correctamente", 
-            timestamp = DateTime.Now,
-            environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")
-        });
     }
 }
