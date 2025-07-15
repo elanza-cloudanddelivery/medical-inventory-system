@@ -6,6 +6,9 @@ using System.Text;
 using MedicalInventory.API.Data;
 using MedicalInventory.API.Services.AuthService;
 using MedicalInventory.API.Services.JwtService;
+using MedicalInventory.API.Services.MedicalProductService;
+using MedicalInventory.API.Services.CartService;
+using MedicalInventory.API.Services.Validators.CartValidator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +21,21 @@ builder.Services.AddDbContext<MedicalInventoryDbContext>(options =>
 // Registrar servicios de negocio
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMedicalProductService, MedicalProductService>();
+builder.Services.AddScoped<ICartValidator, CartValidator>();
+builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<ICartDispenseService, CartDispenseService>();
 
 // Configurar JWT Authentication
-var jwtKey = builder.Configuration["JWT:Key"] ?? "MiClaveSecretaSuperSeguraDeAlMenos32CaracteresParaSerSegura123!";
-var jwtIssuer = builder.Configuration["JWT:Issuer"] ?? "MedicalInventoryAPI";
-var jwtAudience = builder.Configuration["JWT:Audience"] ?? "MedicalInventoryClient";
+var jwtKey = builder.Configuration["JWT:Key"];
+var jwtIssuer = builder.Configuration["JWT:Issuer"];
+var jwtAudience = builder.Configuration["JWT:Audience"];
+
+// Solo validar que la clave secreta exista
+if (string.IsNullOrEmpty(jwtKey))
+{
+    throw new InvalidOperationException("JWT Key no está configurada en User Secrets");
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -44,6 +57,18 @@ builder.Services.AddAuthorization();
 
 // Configurar controladores
 builder.Services.AddControllers();
+
+//Configurar CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")  // URL de Angular
+              .AllowAnyMethod()                      // GET, POST, PUT, DELETE
+              .AllowAnyHeader()                      // Authorization, Content-Type, etc.
+              .AllowCredentials();                   // Para cookies/auth
+    });
+});
 
 // Configurar Swagger para documentación de APIs
 builder.Services.AddEndpointsApiExplorer();
@@ -98,6 +123,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Configurar CORS
+app.UseCors("AllowAngularApp");
 
 // ORDEN CORRECTO: Authentication → Authorization → Controllers
 app.UseAuthentication();
