@@ -103,6 +103,9 @@ public class CartDispenseService : ICartDispenseService
             cart.Status = CartStatus.Confirmed;
             cart.ConfirmedAt = DateTime.UtcNow;
             cart.LastModifiedAt = DateTime.UtcNow;
+            cart.TargetDepartment = request.Department;
+            cart.Notes = request.Notes;
+            cart.Purpose = request.Reason;
 
             await _context.SaveChangesAsync();
             await transaction.CommitAsync();
