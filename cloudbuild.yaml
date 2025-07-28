@@ -1,0 +1,26 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['build', '-t', 'europe-west1-docker.pkg.dev/ardent-quarter-454807-h6/backend-csharp-repo/backend-csharp', '.']
+
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      ['push', 'europe-west1-docker.pkg.dev/ardent-quarter-454807-h6/backend-csharp-repo/backend-csharp']
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        echo "$SSH_PRIVATE_KEY" > /root/.ssh/id_rsa
+        chmod 600 /root/.ssh/id_rsa
+        ssh-keyscan -H 187.33.155.152 >> /root/.ssh/known_hosts
+
+        ssh -i /root/.ssh/id_rsa root@187.33.155.152 << EOF
+          docker pull europe-west1-docker.pkg.dev/ardent-quarter-454807-h6/backend-csharp-repo/backend-csharp
+          docker stop medicalinventory-backend || true
+          docker rm medicalinventory-backend || true
+          docker run -d --name medicalinventory-backend -p 80:80 europe-west1-docker.pkg.dev/ardent-quarter-454807-h6/backend-csharp-repo/backend-csharp
+        EOF
+images:
+  - 'europe-west1-docker.pkg.dev/ardent-quarter-454807-h6/backend-csharp-repo/backend-csharp'
