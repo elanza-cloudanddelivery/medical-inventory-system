@@ -27,4 +27,13 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
-          gcloud builds submit --config cloudbuild.yaml .
+          gcloud builds submit --config cloudbuild.yaml . \
+            --gcs-source-staging-dir=gs://ardent-quarter-454807-h6_cloudbuild/source
+
+      - name: Debug project and bucket
+        run: |
+          echo "Project: ${{ secrets.GCP_PROJECT_ID }}"
+          gcloud config list
+          gcloud builds submit --config cloudbuild.yaml . --verbosity=debug
+
+
